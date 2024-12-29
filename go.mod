@@ -1,4 +1,4 @@
-module matrix-botc
+module github.com/cyb3rko/matrix-botc
 
 go 1.23
 
