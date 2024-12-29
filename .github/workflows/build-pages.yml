@@ -1,0 +1,24 @@
+name: Build and publish documentation
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+    paths:
+      - docs/**
+permissions:
+  contents: write
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v5
+        with:
+          enable-cache: true
+          cache-dependency-glob: "docs/uv.lock"
+      - uses: actions/setup-python@v5
+        with:
+          python-version-file: "docs/.python-version"
+      - run: cd docs && uv sync
+      - run: cd docs && uv run mkdocs gh-deploy --force

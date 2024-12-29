@@ -29,3 +29,6 @@ go.work.sum
 
 # IDEs
 .idea
+
+# Python files
+.venv
