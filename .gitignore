@@ -32,3 +32,6 @@ go.work.sum
 
 # Python files
 .venv
+
+# MkDocs Material files
+docs/.cache

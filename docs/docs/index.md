@@ -1,17 +1,31 @@
-# Welcome to MkDocs
+---
+comments: true
+---
 
-For full documentation visit [mkdocs.org](https://www.mkdocs.org).
+# Matrix Bot Command Standard
 
-## Commands
+The **M**atrix **B**ot **C**ommand **S**tandard is the unofficial standard on how to define and process commands of bots for the [Matrix Protocol](https://matrix.org).
 
-* `mkdocs new [dir-name]` - Create a new project.
-* `mkdocs serve` - Start the live-reloading docs server.
-* `mkdocs build` - Build the documentation site.
-* `mkdocs -h` - Print help message and exit.
+This website and [cyb3rko/matrix-botc](https://github.com/cyb3rko/matrix-botc) is the home of the specification and command process library for Golang.
 
-## Project layout
+## Chapters
 
-    mkdocs.yml    # The configuration file.
-    docs/
-        index.md  # The documentation homepage.
-        ...       # Other markdown pages, images and other files.
+<div class="grid cards" markdown>
+
+-   :material-file-document-multiple:{ .lg .middle } __Read the Specification__
+
+    ---
+
+    Jump right into the details and try to follow the MBCS.
+
+    [:octicons-arrow-right-24: Specification](specification/index.md)
+
+-   :material-code-tags:{ .lg .middle } __Use the Processing Library__
+
+    ---
+
+    Learn more on how to integrate the MBCS processing library in your project.
+
+    [:octicons-arrow-right-24: Processing Library](processor/index.md)
+
+</div>

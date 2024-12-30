@@ -1,3 +1,87 @@
-site_name: My Docs
+site_name: Matrix Botc
+repo_name: cyb3rko/matrix-botc
+repo_url: https://github.com/cyb3rko/matrix-botc
+edit_uri: edit/main/docs/docs
 theme:
   name: material
+  icon:
+    repo: fontawesome/brands/github
+  language: en
+  custom_dir: overrides
+  features:
+    # Adds button to directly edit source on GitHub
+    - content.action.edit
+    # Adds button to directly view source on GitHub
+    - content.action.view
+    # Replaces browser's tooltips with custom beautiful tooltips
+    - content.tooltips
+    # Footer links to previous and next page
+    - navigation.footer
+    # Enables navigation without full reload
+    - navigation.instant
+    # Shows progress bar when loading takes too long
+    - navigation.instant.progress
+    # Shows "Back to top" button when scrolling up
+    - navigation.top
+    # Updates URL to current anchor
+    - navigation.tracking
+    # Scrolls sidebar to current anchor
+    #- toc.follow
+    # Always renders navigation sidebar
+    #- toc.integrate
+    # Highlight search results on the page
+    - search.highlight
+    # Search suggestions in text field
+    - search.suggest
+  palette:
+    - media: "(prefers-color-scheme)"
+      toggle:
+        icon: material/brightness-auto
+        name: Switch to light mode
+    - media: "(prefers-color-scheme: light)"
+      scheme: default
+      primary: lime
+      toggle:
+        icon: material/brightness-7
+        name: Switch to dark mode
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
+      primary: lime
+      toggle:
+        icon: material/brightness-4
+        name: Switch to system preference
+plugins:
+  - git-committers:
+      repository: cyb3rko/matrix-botc
+      branch: main
+      docs_path: docs/docs/
+  - git-revision-date-localized:
+      enable_creation_date: true
+      type: date
+  - search
+markdown_extensions:
+  - abbr
+  - attr_list
+  - md_in_html
+  # Allows usage of emojis, search for available emojis here: https://squidfunk.github.io/mkdocs-material/reference/icons-emojis/#search
+  - pymdownx.emoji:
+      emoji_index: !!python/name:material.extensions.emoji.twemoji
+      emoji_generator: !!python/name:material.extensions.emoji.to_svg
+  - pymdownx.inlinehilite
+  # Allows embedding content from arbitrary files into documents
+  - pymdownx.snippets:
+      auto_append:
+        - includes/abbreviations.md
+  - pymdownx.superfences
+nav:
+  - Homepage: index.md
+  - Specification: specification/index.md
+  - Processing Library: processor/index.md
+extra:
+  social:
+    - icon: fontawesome/brands/github
+      link: https://github.com/cyb3rko
+    - icon: fontawesome/brands/linkedin
+      link: https://linkedin.com/in/cyb3rko
+watch:
+  - includes
