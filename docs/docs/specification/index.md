@@ -6,6 +6,19 @@ comments: true
 
 This is the unofficial standard on how to define and process commands of bots for the [Matrix Protocol](https://matrix.org).
 
+
+
+---
+
+Responsible for evaluating compliance with this specification are project maintainers themselves.  
+If they think of their project to be compliant, they can add this badge to their documentation and/or README(s):
+
+[![Matrix Bot Command Standard Compliance](https://img.shields.io/badge/MBCS%201.0-Compliant-cbdc38?style=flat&logo=matrix&cacheSeconds=604800&link=https%3A%2F%2Fcyb3rko.github.io%2Fmatrix-botc%2F)](https://cyb3rko.github.io/matrix-botc)  
+([CODE](https://github.com/cyb3rko/botc/blob/main/docs/badge.md))  
+_(Feel free to modify the badge as needed)_
+
+---
+
 To better explain the details, we use the following example statement from [Draupnir](https://github.com/the-draupnir-project/Draupnir) as reference:  
 
 Definition:
@@ -49,7 +62,7 @@ A command shall be considered case-**in**sensitive.
 
 (In the case of a statement without any command, so only the prefix itself, the command `help` shall be implicitly assumed.)
 
-**RegEx**: [`^[a-z0-9]{1,20}$`](https://regex101.com/r/GED1SZ/1)  
+**RegEx**: [`^[a-z0-9]{1,20}$`](https://regex101.com/r/GED1SZ/2)  
 **Examples**:
 
 - `list` (see [example](#))
@@ -86,7 +99,7 @@ Multiple arguments shall be separated by a single whitespace. If an argument con
 ### Whitespace Handling
 
 Before every processing step of a statement, leading and trailing whitespace shall be removed (trimmed).  
-_(Whitespace here visualized as \_)_
+_(Whitespace visualized as \_)_
 
 1. `__!dp__list___create_mylist__local-alias_` shall be processed as  
 `!dp__list___create_mylist__local-alias`
@@ -108,8 +121,26 @@ That way the processor does not have to distinguish between e.g. the prefixes `!
 A statement received by the bot shall only be processed if the trimmed statement...
 
 - starts with the prefix and at least one whitespace,
-- consists of only the prefix.
+- or consists of only the prefix.
 
 In all other cases, the message shall not be further processed.
 
-### 
+### Argument Handling
+
+All arguments of a command shall be trimmed (see [Whitespace Handling](#whitespace-handling)) and converted into a list of strings.  
+The logic for a command shall receive a list of strings from the processor, filled with the trimmed arguments or empty if no arguments passed.
+
+### Help pages
+
+Unexpected input from the user shall never be ignored, instead the most relevant help page shall be returned to the user.  
+The prefix without a command and every command in the command chain shall provide a help page.  
+The help page to a command shall be requestable with the input `<command> help` or by omitting following commands and arguments like `<command>`.
+
+The following list shows a recommended help page fall-back logic based on the [example statement](#):
+
+- `!dp` :material-arrow-right: `!dp help`
+- `!dp <unknown_command>` :material-arrow-right: `!dp help`
+- `!dp list` :material-arrow-right: `!dp list help`
+- `!dp list <unknown_subcommand>` :material-arrow-right: `!dp list help`
+- `!dp list create` :material-arrow-right: `!dp list create help`
+- `!dp list create <unexpected_argument(s)>` :material-arrow-right: `!dp list create help`

@@ -6,6 +6,9 @@ comments: true
 
 The **M**atrix **B**ot **C**ommand **S**tandard is the unofficial standard on how to define and process commands of bots for the [Matrix Protocol](https://matrix.org).
 
+It's main goal is to unify bot commands and make the interaction with bots easier for developers and users.  
+Because every bot having slightly different syntax and command structure does not help UX.
+
 This website and [cyb3rko/matrix-botc](https://github.com/cyb3rko/matrix-botc) is the home of the specification and command process library for Golang.
 
 ## Chapters
