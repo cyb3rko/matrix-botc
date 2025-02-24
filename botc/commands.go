@@ -7,7 +7,10 @@
 package botc
 
 import (
+	"github.com/cyb3rko/matrix-botc/util"
+	"gopkg.in/yaml.v3"
 	"maunium.net/go/mautrix/event"
+	"os"
 	"regexp"
 	"strings"
 )
@@ -17,12 +20,14 @@ const commandRegex = "^[a-z0-9]{1,20}$"
 
 var commandPrefix string
 var commandMapping map[string]Command
+var selfDisclosureFunction SelfDisclosureFunction
 var topLevelHelpFunction CommandHelpFunction
 
 type Config struct {
-	Prefix       string
-	Mapping      map[string]Command
-	HelpFunction CommandHelpFunction
+	Prefix                 string
+	Mapping                map[string]Command
+	SelfDisclosureFunction SelfDisclosureFunction
+	HelpFunction           CommandHelpFunction
 }
 
 type Command struct {
@@ -33,6 +38,16 @@ type Command struct {
 	Subcommands       map[string]Command
 }
 
+type SelfDisclosure struct {
+	Name        string
+	Author      string
+	Version     string
+	About       string
+	Interactive bool
+}
+
+type SelfDisclosureFunction func(disclosure *SelfDisclosure)
+
 type CommandFunction func(evt *event.Event, args []string)
 
 type CommandHelpFunction func()
@@ -42,19 +57,44 @@ type CommandHelpFunction func()
 //goland:noinspection GoUnusedExportedFunction
 func RegisterCommands(config *Config) {
 	print("Botc: Registering commands for this bot")
-	prefix := strings.ToLower(config.Prefix)
-	if !regexp.MustCompile(prefixRegex).MatchString(prefix) {
-		panic(format("Botc: Prefix '%s' does not match allowed format '%s'", prefix, prefixRegex))
-	}
-	commandPrefix = prefix
+	commandPrefix = validatePrefix(config.Prefix)
+	validateDisclosureConfig(config.SelfDisclosureFunction)
 	cmdRegex := regexp.MustCompile(commandRegex)
 	valid, err := checkCommands(cmdRegex, config.Mapping, 0)
 	if !valid {
 		panic(err)
 	}
 	commandMapping = config.Mapping
+	selfDisclosureFunction = config.SelfDisclosureFunction
 	topLevelHelpFunction = config.HelpFunction
 	print("Botc: Config check complete, commands are registered")
+}
+
+func validatePrefix(prefix string) string {
+	prefix = strings.ToLower(prefix)
+	if !regexp.MustCompile(prefixRegex).MatchString(prefix) {
+		panic(format("Botc: Prefix '%s' does not match allowed format '%s'", prefix, prefixRegex))
+	}
+	return prefix
+}
+
+func validateDisclosureConfig(selfDisclosureFunction SelfDisclosureFunction) {
+	if selfDisclosureFunction == nil {
+		return
+	}
+	config, err := os.ReadFile("disclosure.yaml")
+	if err != nil {
+		panic(format("Botc: Error reading disclosure.yaml: %s", err))
+	}
+	data := make(map[interface{}]interface{})
+	err = yaml.Unmarshal(config, &data)
+	if err != nil {
+		panic(format("Botc: Error processing disclosure.yaml: %s", err))
+	}
+	valid, missingKey := util.HasMapKeys(data, []string{"name", "author", "version", "about", "interactive"})
+	if !valid {
+		panic(format("Botc: disclosure.yml does not contain key '%s'", missingKey))
+	}
 }
 
 // ProcessCommandChain triggers the processing on user input and executes the registered command functions
@@ -67,6 +107,11 @@ func ProcessCommandChain(input string, evt *event.Event) bool {
 	lowerInput := strings.ToLower(input)
 	if !strings.HasPrefix(lowerInput, commandPrefix+" ") && lowerInput != commandPrefix {
 		// not related to registered prefix
+		if lowerInput == "!bots" {
+			// self-disclosure trigger
+			processSelfDisclosure()
+			return true
+		}
 		return false
 	}
 	commandParts := strings.Split(input, " ")[1:]
@@ -122,6 +167,32 @@ func processCommand(
 			parentHelpFunction()
 			return false
 		}
+	}
+}
+
+func processSelfDisclosure() {
+	if selfDisclosureFunction != nil {
+		config, err := os.ReadFile("disclosure.yaml")
+		if err != nil {
+			return
+		}
+		data := make(map[interface{}]interface{})
+		err = yaml.Unmarshal(config, &data)
+		if err != nil {
+			return
+		}
+		valid, _ := util.HasMapKeys(data, []string{"name", "author", "version", "about", "interactive"})
+		if !valid {
+			return
+		}
+		selfDisclosure := SelfDisclosure{
+			Name:        data["name"].(string),
+			Author:      data["author"].(string),
+			Version:     data["version"].(string),
+			About:       data["about"].(string),
+			Interactive: data["interactive"].(bool),
+		}
+		selfDisclosureFunction(&selfDisclosure)
 	}
 }
 

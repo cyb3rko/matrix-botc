@@ -83,5 +83,9 @@ extra:
       link: https://github.com/cyb3rko
     - icon: fontawesome/brands/linkedin
       link: https://linkedin.com/in/cyb3rko
+    - icon: simple/matrix
+      link: https://matrix.to/#/@cyb3rko:matrix.org
+    - icon: fontawesome/brands/signal-messenger
+      link: https://signal.me/#eu/UrDFSwAXDnM2L4WwWy2QZGYfRHHgmF8d6xDKI3hDYH9iX9zWqeFAOqmJB5-EPKIM
 watch:
   - includes

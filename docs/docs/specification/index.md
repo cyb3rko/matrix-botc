@@ -121,7 +121,8 @@ That way the processor does not have to distinguish between e.g. the prefixes `!
 A statement received by the bot shall only be processed if the trimmed statement...
 
 - starts with the prefix and at least one whitespace,
-- or consists of only the prefix.
+- consists of only the prefix
+- or is the [bot self-disclosure trigger](#bot-self-disclosure).
 
 In all other cases, the message shall not be further processed.
 
@@ -144,3 +145,17 @@ The following list shows a recommended help page fall-back logic based on the [e
 - `!dp list <unknown_subcommand>` :material-arrow-right: `!dp list help`
 - `!dp list create` :material-arrow-right: `!dp list create help`
 - `!dp list create <unexpected_argument(s)>` :material-arrow-right: `!dp list create help`
+
+## Bot Self-Disclosure
+
+To allow the end user to see active bots in a room and which bots he can interact with, there's the general bot self-disclosure trigger statement:
+
+`!bots`
+
+This command may be answered by any bot listening with the following information:
+
+- **Name**: the name of the bot
+- **Author**: the author of the bot
+- **Version**: the currently running version of the bot
+- **'About' Link**: a URL to a web page with more information about the bot, preferably Git repos (GitHub, GitLab, etc.)
+- **Interaction Notice**: an indicator wether a standard user (moderators/admins excluded) is allowed to interact with the bot (for example: 'Yes' / 'No')
