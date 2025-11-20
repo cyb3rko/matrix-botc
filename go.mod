@@ -1,6 +1,7 @@
 module github.com/cyb3rko/matrix-botc
 
-go 1.23
+go 1.24.0
+
 toolchain go1.24.1
 
 require (
@@ -10,6 +11,6 @@ require (
 
 require (
 	go.mau.fi/util v0.8.6 // indirect
-	golang.org/x/crypto v0.37.0 // indirect
+	golang.org/x/crypto v0.45.0 // indirect
 	golang.org/x/exp v0.0.0-20250408133849-7e4ce0ab07d0 // indirect
 )
